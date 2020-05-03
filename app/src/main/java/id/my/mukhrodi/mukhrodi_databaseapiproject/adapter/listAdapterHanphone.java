@@ -15,10 +15,10 @@ import java.util.List;
 import id.my.mukhrodi.mukhrodi_databaseapiproject.R;
 import id.my.mukhrodi.mukhrodi_databaseapiproject.model.Handphone;
 
-public class ListAdapterHandphone extends BaseAdapter implements Filterable {
+public class listAdapterHanphone extends BaseAdapter implements Filterable {
     private Context context;
     private List<Handphone>list, filterd;
-    public ListAdapterHandphone(Context context, List<Handphone> list){
+    public listAdapterHanphone(Context context, List<Handphone> list){
         this.context = context;
         this.list = list;
         this.filterd = this.list;
