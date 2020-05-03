@@ -1,5 +1,6 @@
 package id.my.mukhrodi.mukhrodi_databaseapiproject.server;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -20,7 +21,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class AsyncInvokeURLTask extends AsyncTask<Void, Void, String> {
-    public String mNoteItWebUrl = "www.smartneasy.com";
+    public String mNoteItWebUrl = "www.siakad-altie.com";
     private ArrayList<NameValuePair> mParams;
     private OnPostExecuteListener mPostExecuteListener = null;
     private ProgressDialog dialog;
@@ -28,6 +29,7 @@ public class AsyncInvokeURLTask extends AsyncTask<Void, Void, String> {
     public String message ="Proses Data";
     //Harus diganti dengan IP Server yang digunakan
     public String url_server ="https://siakad-altie.000webhostapp.com/xphone/";
+    @SuppressLint("StaticFieldLeak")
     public Context applicationContext;
     public static interface OnPostExecuteListener{
         void onPostExecute(String result);
@@ -80,6 +82,7 @@ public class AsyncInvokeURLTask extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         }
         return result;
+
     }
 
     private static String convertStreamToString(InputStream is){

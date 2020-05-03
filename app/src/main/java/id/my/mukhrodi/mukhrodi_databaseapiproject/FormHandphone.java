@@ -1,15 +1,12 @@
 package id.my.mukhrodi.mukhrodi_databaseapiproject;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import id.my.mukhrodi.mukhrodi_databaseapiproject.model.Handphone;
 import id.my.mukhrodi.mukhrodi_databaseapiproject.server.AsyncInvokeURLTask;
@@ -19,20 +16,18 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class FormHandphone extends AppCompatActivity {
     private EditText textNama, textHarga;
     private Handphone handphone;
     public static final String urlSubmit = "submit_phone.php";
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_handphone);
         initView();
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         handphone = new Handphone();
         if (getIntent().hasExtra("id")) {
             String id = getIntent().getStringExtra("id");
@@ -40,7 +35,6 @@ public class FormHandphone extends AppCompatActivity {
             String harga = getIntent().getStringExtra("harga");
             textNama.setText(nama);
             textHarga.setText(harga);
-            assert id != null;
             handphone.setId(Integer.valueOf(id));
         } else {
             handphone.setId(0);
@@ -99,7 +93,7 @@ public class FormHandphone extends AppCompatActivity {
             task.showdialog = true;
             task.message = "Proses Submit Data Harap Tunggu..";
             task.applicationContext = FormHandphone.this;
-            task.url_server = "urlSubmit";
+            task.mNoteItWebUrl = urlSubmit;
             task.execute();
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,14 +1,11 @@
 package id.my.mukhrodi.mukhrodi_databaseapiproject;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.SearchManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -21,35 +18,36 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
-import id.my.mukhrodi.mukhrodi_databaseapiproject.adapter.listAdapterHanphone;
+
+import id.my.mukhrodi.mukhrodi_databaseapiproject.adapter.ListAdapterHandphone;
 import id.my.mukhrodi.mukhrodi_databaseapiproject.model.Handphone;
 import id.my.mukhrodi.mukhrodi_databaseapiproject.server.AsyncInvokeURLTask;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class MainActivity<refresh> extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final String TAG = "MainActivity";
+    public static final String urlDelete = "delete_phone.php";
     private ListView listView;
     private ActionMode actionMode;
     private ActionMode.Callback amCallback;
     private List<Handphone> listhp;
-    private listAdapterHanphone adapter;
+    private ListAdapterHandphone adapter;
     private Handphone selectedList;
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         listView = (ListView) findViewById(R.id.listview_main);
         amCallback = new ActionMode.Callback() {
             @Override
@@ -92,14 +90,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Delete " + selectedList.getNama() + " ?");
         builder.setTitle("Delete");
-        builder.setPositiveButton("Yes", new
-                DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        listhp.remove(selectedList);
-                        Toast.makeText(getApplicationContext(), "deleted",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //listhp.remove(listhp.indexOf(selectedList));
+                deleteData();
+                Toast.makeText(getApplicationContext(), "deleted", Toast.LENGTH_SHORT).show();
+            }
+        });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -109,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         alert.setIcon(android.R.drawable.ic_menu_delete);
         alert.show();
     }
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -126,32 +122,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 null, null);
         TextView textView = (TextView) searchView.findViewById(id);
         textView.setTextColor(Color.WHITE);
-        assert searchManager != null;
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(this);
         searchView.setQueryHint("nama");
         return true;}
-
-    public ComponentName getComponentName() {
-        return null;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.option_menu_new) {
-            Intent in = new Intent(getApplicationContext(),
-                    FormHandphone.class);
-            startActivity(in);
+        switch (item.getItemId()) {
+            case R.id.option_menu_new:
+                Intent in = new Intent(getApplicationContext(),
+                        FormHandphone.class);
+                startActivity(in);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    public Context getApplicationContext() {
-        return null;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void processResponse(String response) {
         try {
             JSONObject jsonObj = new JSONObject(response);
@@ -167,12 +153,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 this.listhp.add(handphone);
             }
         } catch (JSONException e) {
-            Log.d(TAG, Objects.requireNonNull(e.getMessage()));
+            Log.d(TAG, e.getMessage());
         }
     }
     private void populateListView() {
-        adapter = new listAdapterHanphone(getApplicationContext(),
-                this.listhp);
+        adapter = new ListAdapterHandphone(getApplicationContext(), this.listhp);
         listView.setAdapter(adapter);
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -202,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         try {
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(0);
             AsyncInvokeURLTask task = new AsyncInvokeURLTask(nameValuePairs, new AsyncInvokeURLTask.OnPostExecuteListener() {
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onPostExecute(String result) {
 //TODO Auto-generated method stub
@@ -226,30 +210,34 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
     public void deleteData() {
         try {
-            ArrayList<NameValuePair> nameValuePairs = new
-                    ArrayList<NameValuePair>(0);
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(0);
+            nameValuePairs.add(new BasicNameValuePair("id", String.valueOf(selectedList.getId())));
             AsyncInvokeURLTask task = new AsyncInvokeURLTask(nameValuePairs, new AsyncInvokeURLTask.OnPostExecuteListener() {
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onPostExecute(String result) {
-// TODO Auto-generated method stub
                     Log.d("TAG", "Login:" + result);
                     if (result.equals("timeout") ||result.trim().equalsIgnoreCase("Tidak dapat Terkoneksi ke Data Base")) {
                         Toast.makeText(getBaseContext(), "Tidak Dapat Terkoneksi dengn Server", Toast.LENGTH_SHORT).show();
                     } else {
                         processResponse(result);
                         populateListView();
+                        goToMainActivity();
                     }
                 }
             });
             task.showdialog = true;
             task.message = "Load Data HP Harap Tunggu..";
             task.applicationContext = MainActivity.this;
-            task.mNoteItWebUrl = "/select_all.php";
+            task.mNoteItWebUrl = urlDelete;
             task.execute();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private void goToMainActivity() {
+        Intent in = new Intent(getApplicationContext(), MainActivity.class);
+        in.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(in);
     }
     @Override
     public boolean onQueryTextChange(String newText) {
