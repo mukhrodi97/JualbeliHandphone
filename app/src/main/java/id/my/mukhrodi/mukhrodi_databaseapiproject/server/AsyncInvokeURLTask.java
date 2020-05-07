@@ -28,7 +28,7 @@ public class AsyncInvokeURLTask extends AsyncTask<Void, Void, String> {
     public boolean showdialog =false;
     public String message ="Proses Data";
     //Harus diganti dengan IP Server yang digunakan
-    public String url_server ="https://siakad-altie.000webhostapp.com/xphone/";
+    public String url_server ="https://mukhrodi.000webhostapp.com/xphone/";
     @SuppressLint("StaticFieldLeak")
     public Context applicationContext;
     public static interface OnPostExecuteListener{

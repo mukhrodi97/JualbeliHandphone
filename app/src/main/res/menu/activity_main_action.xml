@@ -4,16 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
     <item
-        android:id="@+id/option_menu_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/option_menu_search"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.widget.SearchView"
+        android:id="@+id/action_menu_edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/option_menu_edit"
+        app:showAsAction="ifRoom|withText"
         />
     <item
-        android:id="@+id/option_menu_new"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/option_menu_new"
+        android:id="@+id/action_menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/action_menu_delete"
         app:showAsAction="ifRoom|withText"
         />
 </menu>
